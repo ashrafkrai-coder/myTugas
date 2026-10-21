@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>myTugas</title>
 <meta name="description" content="Jadual Guru Bertugas SMK Taman Medan 2026">
-<meta name="theme-color" content="#1e3a8a">
+<meta name="theme-color" content="#142b4a">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -13,58 +13,87 @@
 <meta name="apple-mobile-web-app-title" content="myTugas">
 <style>
 :root{
-  --bg:#f1f5fb;--card:#fff;--ink:#0f172a;--mute:#64748b;--line:#e2e8f0;--brand:#1e3a8a;--brand2:#2563eb;--accent:#f59e0b;
-  --kantin:#ec4899;--blok:#3b82f6;--surau:#16a34a;--sekitar:#d97706;
+  color-scheme:light;
+  --bg:#f4f6fa;--card:#fff;--ink:#17243a;--mute:#718096;--line:#e5e9f0;--brand:#142b4a;--brand2:#1d466d;--accent:#caa968;
+  --kantin:#a66a79;--blok:#577b9d;--surau:#568477;--sekitar:#a77e4e;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0b1220;--card:#131c2e;--ink:#e5e7eb;--mute:#94a3b8;--line:#22304a;--brand:#1e3a8a;--brand2:#60a5fa;
+  color-scheme:dark;
+  --bg:#101722;--card:#182230;--ink:#edf1f7;--mute:#a3afbf;--line:#2a3747;--brand:#142b4a;--brand2:#8baecb;--accent:#d7b979;
 }}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(80px + env(safe-area-inset-bottom))}
-header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px 18px;display:flex;gap:12px;align-items:center}
-header img{width:46px;height:50px;object-fit:contain;background:#fff;border-radius:10px;padding:3px}
-header h1{font-size:1.35rem;letter-spacing:.3px}
-header p{font-size:.78rem;opacity:.85}
-main{max-width:720px;margin:0 auto;padding:16px}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:radial-gradient(ellipse at 50% -20%,rgba(202,169,104,.13),transparent 42%),var(--bg);color:var(--ink);padding-bottom:calc(88px + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased}
+svg{display:block}
+.ic svg,nav button svg,.btn svg{fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.7}
+.icon-library{position:absolute;width:0;height:0;overflow:hidden}
+header{position:relative;overflow:hidden;background:linear-gradient(115deg,#10243c 0%,#183b5b 68%,#25506a 100%);color:#fff;padding:calc(24px + env(safe-area-inset-top)) 20px 28px}
+header::after{content:"";position:absolute;width:250px;height:250px;border:1px solid rgba(255,255,255,.08);border-radius:50%;right:-82px;top:-142px;box-shadow:0 0 0 25px rgba(255,255,255,.025),0 0 0 52px rgba(255,255,255,.02)}
+.header-inner{position:relative;z-index:1;display:flex;gap:16px;align-items:center;max-width:820px;margin:0 auto}
+header img{width:54px;height:58px;object-fit:contain;background:#fff;border-radius:15px;padding:5px;box-shadow:0 5px 18px rgba(0,0,0,.14)}
+header h1{font-size:1.5rem;letter-spacing:.01em;font-weight:750}
+header p{font-size:.8rem;opacity:.78;margin-top:3px}
+header .eyebrow{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#dfc58f;margin-bottom:4px}
+main{max-width:820px;margin:0 auto;padding:22px 18px 28px}
 .view{display:none}.view.on{display:block}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
-.hello{font-size:.85rem;color:var(--mute)}
-.today{font-size:1.25rem;font-weight:700;margin:2px 0 10px}
-.clock{font-variant-numeric:tabular-nums;color:var(--brand2);font-weight:600}
-.duty{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--bg);margin-top:8px;border-left:5px solid var(--c)}
-.duty .ic{font-size:1.6rem;width:36px;text-align:center}
-.duty b{display:block;font-size:.95rem}
-.duty small{color:var(--mute);font-size:.78rem}
-.duty .who{margin-left:auto;text-align:right;font-weight:600;font-size:.9rem}
-.mine{outline:2px solid var(--accent);outline-offset:1px}
-.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:0;border-radius:12px;background:var(--accent);color:#1f1300;font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer;margin-top:12px}
-.btn.alt{background:var(--brand2);color:#fff}
-select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1rem}
-label{font-size:.85rem;color:var(--mute);display:block;margin-bottom:6px}
-.days{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
-.days button{flex:1;min-width:64px;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:600;font-size:.85rem;cursor:pointer}
-.days button.on{background:var(--brand2);color:#fff;border-color:transparent}
-.days button.now::after{content:" •";color:var(--accent)}
-h2{font-size:1rem;margin-bottom:8px}
-ul.notes{list-style:none;font-size:.88rem}
-ul.notes li{padding:7px 0 7px 26px;position:relative;border-bottom:1px dashed var(--line)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:21px;margin-bottom:16px;box-shadow:0 8px 24px rgba(23,36,58,.045)}
+.hello{font-size:.86rem;color:var(--mute);line-height:1.55}
+.today{font-size:1.42rem;font-weight:720;letter-spacing:-.025em;margin:5px 0 8px}
+.clock{font-variant-numeric:tabular-nums;color:var(--brand2);font-weight:600;font-size:.83rem}
+.duty{display:flex;align-items:center;gap:14px;padding:14px 15px;border-radius:14px;background:color-mix(in srgb,var(--bg) 72%,var(--card));margin-top:10px;border:1px solid var(--line);border-left:3px solid var(--c);transition:transform .18s ease,box-shadow .18s ease}
+.duty .ic{display:grid;place-items:center;flex:0 0 42px;width:42px;height:42px;border-radius:13px;background:color-mix(in srgb,var(--c) 12%,var(--card));color:var(--c)}
+.duty .ic svg{width:21px;height:21px}
+.duty b{display:block;font-size:.92rem;font-weight:680;line-height:1.4}
+.duty small{display:block;color:var(--mute);font-size:.75rem;line-height:1.45;margin-top:2px}
+.duty .who{margin-left:auto;text-align:right;font-weight:620;font-size:.84rem;line-height:1.4;padding-left:8px}
+.mine{outline:2px solid color-mix(in srgb,var(--accent) 58%,transparent);outline-offset:2px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 16px;border:1px solid #d1b576;border-radius:13px;background:linear-gradient(135deg,#dfc58f,#c5a560);color:#243247;font-weight:700;font-size:.91rem;text-decoration:none;cursor:pointer;margin-top:17px;box-shadow:0 5px 14px rgba(173,139,76,.18);transition:transform .18s ease,filter .18s ease}
+.btn svg{width:18px;height:18px}
+.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn.alt{border-color:transparent;background:var(--brand);color:#fff;box-shadow:none}
+select{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.94rem;outline:none}
+select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand2) 14%,transparent)}
+label{font-size:.8rem;color:var(--mute);display:block;margin-bottom:8px;font-weight:600}
+.days{display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none;padding:2px}
+.days button{flex:1;min-width:64px;padding:11px 8px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--mute);font-weight:600;font-size:.82rem;cursor:pointer;transition:all .18s ease}
+.days button.on{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 4px 12px rgba(20,43,74,.16)}
+.days button.now:not(.on){border-color:var(--accent);color:var(--ink)}
+.days button.now::after{content:"  •";color:var(--accent)}
+h2{font-size:1rem;letter-spacing:-.01em;margin-bottom:12px;font-weight:700}
+ul.notes{list-style:none;font-size:.86rem}
+ul.notes li{padding:11px 0 11px 29px;position:relative;border-bottom:1px solid var(--line);line-height:1.55}
 ul.notes li:last-child{border:0}
-ul.notes li::before{content:"✔";position:absolute;left:4px;color:#e11d48;font-weight:700}
-.empty{text-align:center;color:var(--mute);padding:18px 6px;font-size:.92rem}
-.badge{display:inline-block;background:var(--accent);color:#1f1300;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle}
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:5}
-nav button{flex:1;background:none;border:0;padding:9px 4px;color:var(--mute);font-size:.72rem;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
-nav button span{font-size:1.3rem}
+ul.notes li::before{content:"";position:absolute;left:5px;top:17px;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 14%,transparent)}
+.empty{text-align:center;color:var(--mute);padding:20px 8px;font-size:.88rem;line-height:1.55}
+.badge{display:inline-flex;background:color-mix(in srgb,var(--accent) 22%,var(--card));color:var(--ink);font-size:.62rem;font-weight:750;letter-spacing:.06em;padding:4px 9px;border-radius:99px;margin-left:7px;vertical-align:middle}
+nav{position:fixed;bottom:0;left:0;right:0;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid var(--line);display:flex;padding:7px max(8px,calc((100vw - 560px)/2)) calc(7px + env(safe-area-inset-bottom));z-index:5}
+nav button{position:relative;flex:1;background:none;border:0;padding:7px 4px;color:var(--mute);font-size:.68rem;font-weight:550;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+nav button svg{width:21px;height:21px;stroke-width:1.75}
 nav button.on{color:var(--brand2);font-weight:700}
-.motto{text-align:center;font-style:italic;color:var(--mute);font-size:.85rem;margin:6px 0 4px}
-.foot{text-align:center;color:var(--mute);font-size:.75rem;margin-top:8px}
+nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2px;border-radius:2px;background:var(--accent)}
+.motto{text-align:center;font-style:italic;color:var(--mute);font-size:.82rem;line-height:1.5;margin:15px 0 5px}
+.foot{text-align:center;color:var(--mute);font-size:.72rem;margin-top:10px;letter-spacing:.04em}
 #install{display:none}
+@media(min-width:700px){main{padding-top:28px}.view#v-home.on{display:grid;grid-template-columns:1.1fr .9fr;align-items:start;gap:16px}.view#v-home>.card{margin-bottom:0}.card{padding:24px}}
+@media(max-width:420px){header{padding-left:17px;padding-right:17px}main{padding:16px 13px 24px}.card{padding:17px;border-radius:17px}.today{font-size:1.25rem}.duty{gap:11px;padding:12px}.duty .ic{flex-basis:38px;width:38px;height:38px}.duty .who{font-size:.79rem}}
 </style>
 </head>
 <body>
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <symbol id="i-store" viewBox="0 0 24 24"><path d="M3 10v10h18V10M3 10l2-6h14l2 6M3 10a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0M9 20v-6h6v6"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16M2 21h20M8 7h2m4 0h2m-8 4h2m4 0h2m-8 4h2m4 0h2m-4 6v-3h2v3"/></symbol>
+  <symbol id="i-landmark" viewBox="0 0 24 24"><path d="m3 9 9-6 9 6M4 10h16M5 10v9m4-9v9m6-9v9m4-9v9M3 21h18M2 19h20"/></symbol>
+  <symbol id="i-tree" viewBox="0 0 24 24"><path d="m12 22 0-8m0-12 8 10h-5l5 6H4l5-6H4l8-10Z"/></symbol>
+  <symbol id="i-report" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8m-8 4h8"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18m-13 4h.01M12 15h.01M16 15h.01"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-8h.01"/></symbol>
+</svg>
 <header>
-  <img src="logo.png" alt="Logo SMK Taman Medan">
-  <div><h1>myTugas</h1><p>Jadual Guru Bertugas · SMK Taman Medan 2026</p></div>
+  <div class="header-inner">
+    <img src="logo.png" alt="Logo SMK Taman Medan">
+    <div><div class="eyebrow">Pengurusan Guru Bertugas</div><h1>myTugas</h1><p>SMK Taman Medan <span aria-hidden="true">·</span> 2026</p></div>
+  </div>
 </header>
 
 <main>
@@ -75,7 +104,7 @@ nav button.on{color:var(--brand2);font-weight:700}
       <div class="today" id="todayLbl">—</div>
       <div class="clock" id="clock"></div>
       <div id="myToday"></div>
-      <a class="btn" id="btnLapor" target="_blank" rel="noopener">📝 Isi Laporan Bertugas</a>
+      <a class="btn" id="btnLapor" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-report"></use></svg>Isi Laporan Bertugas</a>
     </div>
     <div class="card">
       <h2>Guru bertugas hari ini</h2>
@@ -113,36 +142,36 @@ nav button.on{color:var(--brand2);font-weight:700}
     </div>
     <div class="card">
       <h2>Pasang aplikasi</h2>
-      <p class="hello">Android/Chrome: tekan butang di bawah atau menu ⋮ → <b>Tambah ke skrin utama</b>.<br>iPhone (Safari): butang Kongsi ⬆️ → <b>Add to Home Screen</b>.</p>
-      <button class="btn alt" id="install">📲 Pasang myTugas</button>
+      <p class="hello">Android/Chrome: tekan butang di bawah atau buka menu pelayar dan pilih <b>Tambah ke skrin utama</b>.<br>iPhone (Safari): buka menu Kongsi dan pilih <b>Add to Home Screen</b>.</p>
+      <button class="btn alt" id="install"><svg aria-hidden="true"><use href="#i-report"></use></svg>Pasang myTugas</button>
     </div>
     <p class="foot">#MagnificentMedanians</p>
   </section>
 </main>
 
 <nav>
-  <button data-v="home" class="on"><span>🏠</span>Hari Ini</button>
-  <button data-v="jadual"><span>📅</span>Jadual</button>
-  <button data-v="saya"><span>👤</span>Tugas Saya</button>
-  <button data-v="info"><span>ℹ️</span>Info</button>
+  <button data-v="home" class="on"><svg aria-hidden="true"><use href="#i-home"></use></svg>Hari Ini</button>
+  <button data-v="jadual"><svg aria-hidden="true"><use href="#i-calendar"></use></svg>Jadual</button>
+  <button data-v="saya"><svg aria-hidden="true"><use href="#i-user"></use></svg>Tugas Saya</button>
+  <button data-v="info"><svg aria-hidden="true"><use href="#i-info"></use></svg>Info</button>
 </nav>
 
 <script>
 const FORM_URL = "https://forms.gle/Vf7R4QcLpeC8vjze9";
 
 const TUGAS = {
-  kantin:  {nama:"Kantin", ic:"🏪", c:"var(--kantin)", desc:"Pemantauan kawasan kantin, disiplin murid dan kebersihan."},
-  blok:    {nama:"Blok Kelas", ic:"🏫", c:"var(--blok)", desc:"Pemantauan disiplin murid di blok kelas."},
-  surau:   {nama:"Surau", ic:"🕌", c:"var(--surau)", desc:"Pemantauan aktiviti, disiplin dan kebersihan surau."},
-  sekitar: {nama:"Persekitaran Sekolah", ic:"🌳", c:"var(--sekitar)", desc:"Padang, laluan, tandas dan tempat tumpuan murid."}
+  kantin:  {nama:"Kantin", ic:"store", c:"var(--kantin)", desc:"Pemantauan kawasan kantin, disiplin murid dan kebersihan."},
+  blok:    {nama:"Blok Kelas", ic:"building", c:"var(--blok)", desc:"Pemantauan disiplin murid di blok kelas."},
+  surau:   {nama:"Surau", ic:"landmark", c:"var(--surau)", desc:"Pemantauan aktiviti, disiplin dan kebersihan surau."},
+  sekitar: {nama:"Persekitaran Sekolah", ic:"tree", c:"var(--sekitar)", desc:"Padang, laluan, tandas dan tempat tumpuan murid."}
 };
 const HARI = ["Isnin","Selasa","Rabu","Khamis","Jumaat"];
 const JADUAL = {
   Isnin:  {kantin:"En. Suhaimi", blok:"En. Muhamad Nur Ikmal", surau:"En. Muhammad Asyraf Faiz", sekitar:"En. Muhammad Fattuhul Anuwar"},
   Selasa: {kantin:"Pn. Sakinah", blok:"Cik Nor Maysarah", surau:"Pn. Siti Norazami", sekitar:"Cik Munaizah"},
-  Rabu:   {kantin:"Ustaz Asyraf", blok:"Pn. Azhana", surau:"En. Suhaimi", sekitar:"En. Muhamad Nur Ikmal"},
+  Rabu:   {kantin:"Ust Ashraf", blok:"Pn. Azhana", surau:"En. Suhaimi", sekitar:"En. Muhamad Nur Ikmal"},
   Khamis: {kantin:"En. Muhammad Asyraf Faiz", blok:"En. Muhammad Fattuhul Anuwar", surau:"Pn. Sakinah", sekitar:"Cik Nor Maysarah"},
-  Jumaat: {kantin:"Pn. Siti Norazami", blok:"Cik Munaizah", surau:"Ustaz Asyraf", sekitar:"Pn. Azhana"}
+  Jumaat: {kantin:"Pn. Siti Norazami", blok:"Cik Munaizah", surau:"Ust Ashraf", sekitar:"Pn. Azhana"}
 };
 const GURU = [...new Set(HARI.flatMap(h => Object.values(JADUAL[h])))].sort((a,b)=>a.replace(/^\S+\s/,"").localeCompare(b.replace(/^\S+\s/,"")));
 
@@ -155,7 +184,7 @@ function hariIni(){ const d=new Date().getDay(); return d>=1&&d<=5 ? HARI[d-1] :
 function dutyRow(key, who, showWho=true){
   const t=TUGAS[key];
   return `<div class="duty ${who===me?'mine':''}" style="--c:${t.c}">
-    <div class="ic">${t.ic}</div>
+    <div class="ic"><svg aria-hidden="true"><use href="#i-${t.ic}"></use></svg></div>
     <div><b>${t.nama}</b><small>${t.desc}</small></div>
     ${showWho?`<div class="who">${who}</div>`:''}
   </div>`;
@@ -168,14 +197,14 @@ function renderHome(){
   $("#todayLbl").textContent = now.toLocaleDateString("ms-MY",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
   $("#hello").textContent = me ? `Assalamualaikum, ${me}` : "Assalamualaikum — pilih nama anda di tab Tugas Saya";
   if(!h){
-    $("#myToday").innerHTML = `<div class="empty">🌤️ Hari ini cuti hujung minggu. Tiada tugasan.</div>`;
+    $("#myToday").innerHTML = `<div class="empty">Hari ini cuti hujung minggu. Tiada tugasan.</div>`;
     $("#todayList").innerHTML = `<div class="empty">Jadual Isnin:</div>` + dayList("Isnin");
     return;
   }
   const mine = me ? Object.keys(TUGAS).filter(k=>JADUAL[h][k]===me) : [];
   $("#myToday").innerHTML = !me ? "" :
     mine.length ? `<p class="hello" style="margin-top:10px">Tugas anda hari ini <span class="badge">BERTUGAS</span></p>` + mine.map(k=>dutyRow(k,me,false)).join("")
-                : `<div class="empty">✅ Anda tidak bertugas hari ini.</div>`;
+                : `<div class="empty">Anda tidak bertugas hari ini.</div>`;
   $("#todayList").innerHTML = dayList(h);
 }
 
@@ -183,8 +212,8 @@ function renderClock(){
   const n=new Date(), m=n.getHours()*60+n.getMinutes();
   const t=n.toLocaleTimeString("ms-MY",{hour:"2-digit",minute:"2-digit"});
   let s="";
-  if(hariIni()){ s = m<420 ? "Tugas bermula 7.00 pagi" : m<=810 ? "🟢 Waktu bertugas (7.00 pg – 1.30 ptg)" : "Waktu bertugas tamat — jangan lupa isi laporan"; }
-  $("#clock").textContent = `🕒 ${t}${s?" · "+s:""}`;
+  if(hariIni()){ s = m<420 ? "Tugas bermula 7.00 pagi" : m<=810 ? "Waktu bertugas (7.00 pg – 1.30 ptg)" : "Waktu bertugas tamat — jangan lupa isi laporan"; }
+  $("#clock").textContent = `${t}${s?" · "+s:""}`;
 }
 
 let selDay = hariIni() || "Isnin";
@@ -200,7 +229,7 @@ function renderSaya(){
   if(!me){ $("#myList").innerHTML = `<div class="empty">Pilih nama untuk lihat tugasan anda.</div>`; return; }
   const rows = HARI.flatMap(h=>Object.keys(TUGAS).filter(k=>JADUAL[h][k]===me).map(k=>({h,k})));
   $("#myList").innerHTML = rows.map(({h,k})=>{const t=TUGAS[k]; return `<div class="duty ${h===hariIni()?'mine':''}" style="--c:${t.c}">
-    <div class="ic">${t.ic}</div><div><b>${h}${h===hariIni()?'<span class="badge">HARI INI</span>':''}</b><small>${t.nama} · 7.00 pg – 1.30 ptg</small></div></div>`}).join("");
+    <div class="ic"><svg aria-hidden="true"><use href="#i-${t.ic}"></use></svg></div><div><b>${h}${h===hariIni()?'<span class="badge">HARI INI</span>':''}</b><small>${t.nama} · 7.00 pg – 1.30 ptg</small></div></div>`}).join("");
 }
 $("#guru").addEventListener("change",e=>{me=e.target.value; store.set("mytugas_guru",me); renderAll();});
 
