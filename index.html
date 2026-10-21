@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>myTugas</title>
+<meta name="description" content="Jadual Guru Bertugas SMK Taman Medan 2026">
+<meta name="theme-color" content="#1e3a8a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="myTugas">
+<style>
+:root{
+  --bg:#f1f5fb;--card:#fff;--ink:#0f172a;--mute:#64748b;--line:#e2e8f0;--brand:#1e3a8a;--brand2:#2563eb;--accent:#f59e0b;
+  --kantin:#ec4899;--blok:#3b82f6;--surau:#16a34a;--sekitar:#d97706;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0b1220;--card:#131c2e;--ink:#e5e7eb;--mute:#94a3b8;--line:#22304a;--brand:#1e3a8a;--brand2:#60a5fa;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);padding-bottom:calc(80px + env(safe-area-inset-bottom))}
+header{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;padding:calc(14px + env(safe-area-inset-top)) 16px 18px;display:flex;gap:12px;align-items:center}
+header img{width:46px;height:50px;object-fit:contain;background:#fff;border-radius:10px;padding:3px}
+header h1{font-size:1.35rem;letter-spacing:.3px}
+header p{font-size:.78rem;opacity:.85}
+main{max-width:720px;margin:0 auto;padding:16px}
+.view{display:none}.view.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.hello{font-size:.85rem;color:var(--mute)}
+.today{font-size:1.25rem;font-weight:700;margin:2px 0 10px}
+.clock{font-variant-numeric:tabular-nums;color:var(--brand2);font-weight:600}
+.duty{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:var(--bg);margin-top:8px;border-left:5px solid var(--c)}
+.duty .ic{font-size:1.6rem;width:36px;text-align:center}
+.duty b{display:block;font-size:.95rem}
+.duty small{color:var(--mute);font-size:.78rem}
+.duty .who{margin-left:auto;text-align:right;font-weight:600;font-size:.9rem}
+.mine{outline:2px solid var(--accent);outline-offset:1px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border:0;border-radius:12px;background:var(--accent);color:#1f1300;font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer;margin-top:12px}
+.btn.alt{background:var(--brand2);color:#fff}
+select{width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:1rem}
+label{font-size:.85rem;color:var(--mute);display:block;margin-bottom:6px}
+.days{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;scrollbar-width:none}
+.days button{flex:1;min-width:64px;padding:10px 6px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:600;font-size:.85rem;cursor:pointer}
+.days button.on{background:var(--brand2);color:#fff;border-color:transparent}
+.days button.now::after{content:" •";color:var(--accent)}
+h2{font-size:1rem;margin-bottom:8px}
+ul.notes{list-style:none;font-size:.88rem}
+ul.notes li{padding:7px 0 7px 26px;position:relative;border-bottom:1px dashed var(--line)}
+ul.notes li:last-child{border:0}
+ul.notes li::before{content:"✔";position:absolute;left:4px;color:#e11d48;font-weight:700}
+.empty{text-align:center;color:var(--mute);padding:18px 6px;font-size:.92rem}
+.badge{display:inline-block;background:var(--accent);color:#1f1300;font-size:.7rem;font-weight:700;padding:2px 8px;border-radius:99px;margin-left:6px;vertical-align:middle}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav button{flex:1;background:none;border:0;padding:9px 4px;color:var(--mute);font-size:.72rem;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+nav button span{font-size:1.3rem}
+nav button.on{color:var(--brand2);font-weight:700}
+.motto{text-align:center;font-style:italic;color:var(--mute);font-size:.85rem;margin:6px 0 4px}
+.foot{text-align:center;color:var(--mute);font-size:.75rem;margin-top:8px}
+#install{display:none}
+</style>
+</head>
+<body>
+<header>
+  <img src="logo.png" alt="Logo SMK Taman Medan">
+  <div><h1>myTugas</h1><p>Jadual Guru Bertugas · SMK Taman Medan 2026</p></div>
+</header>
+
+<main>
+  <!-- HARI INI -->
+  <section class="view on" id="v-home">
+    <div class="card">
+      <div class="hello" id="hello">Selamat datang</div>
+      <div class="today" id="todayLbl">—</div>
+      <div class="clock" id="clock"></div>
+      <div id="myToday"></div>
+      <a class="btn" id="btnLapor" target="_blank" rel="noopener">📝 Isi Laporan Bertugas</a>
+    </div>
+    <div class="card">
+      <h2>Guru bertugas hari ini</h2>
+      <div id="todayList"></div>
+    </div>
+  </section>
+
+  <!-- JADUAL -->
+  <section class="view" id="v-jadual">
+    <div class="days" id="dayTabs"></div>
+    <div class="card"><div id="dayList"></div></div>
+  </section>
+
+  <!-- TUGAS SAYA -->
+  <section class="view" id="v-saya">
+    <div class="card">
+      <label for="guru">Pilih nama anda</label>
+      <select id="guru"></select>
+    </div>
+    <div class="card"><h2>Tugasan mingguan saya</h2><div id="myList"></div></div>
+  </section>
+
+  <!-- INFO -->
+  <section class="view" id="v-info">
+    <div class="card">
+      <h2>Catatan</h2>
+      <ul class="notes">
+        <li>Guru bertugas berada di stesen tugas mulai pukul 7.00 pagi hingga 1.30 petang.</li>
+        <li>Memastikan murid mematuhi peraturan sekolah.</li>
+        <li>Merekod dan melaporkan sebarang salah laku kepada Unit Disiplin / PK HEM.</li>
+        <li>Bekerjasama menjaga kebersihan, keselamatan dan persekitaran sekolah.</li>
+        <li>Sebarang pertukaran jadual hendaklah dimaklumkan kepada PK HEM.</li>
+      </ul>
+      <p class="motto">“Disiplin Tanggungjawab, Sekolah Bersih, Murid Berjaya”</p>
+    </div>
+    <div class="card">
+      <h2>Pasang aplikasi</h2>
+      <p class="hello">Android/Chrome: tekan butang di bawah atau menu ⋮ → <b>Tambah ke skrin utama</b>.<br>iPhone (Safari): butang Kongsi ⬆️ → <b>Add to Home Screen</b>.</p>
+      <button class="btn alt" id="install">📲 Pasang myTugas</button>
+    </div>
+    <p class="foot">#MagnificentMedanians</p>
+  </section>
+</main>
+
+<nav>
+  <button data-v="home" class="on"><span>🏠</span>Hari Ini</button>
+  <button data-v="jadual"><span>📅</span>Jadual</button>
+  <button data-v="saya"><span>👤</span>Tugas Saya</button>
+  <button data-v="info"><span>ℹ️</span>Info</button>
+</nav>
+
+<script>
+const FORM_URL = "https://forms.gle/Vf7R4QcLpeC8vjze9";
+
+const TUGAS = {
+  kantin:  {nama:"Kantin", ic:"🏪", c:"var(--kantin)", desc:"Pemantauan kawasan kantin, disiplin murid dan kebersihan."},
+  blok:    {nama:"Blok Kelas", ic:"🏫", c:"var(--blok)", desc:"Pemantauan disiplin murid di blok kelas."},
+  surau:   {nama:"Surau", ic:"🕌", c:"var(--surau)", desc:"Pemantauan aktiviti, disiplin dan kebersihan surau."},
+  sekitar: {nama:"Persekitaran Sekolah", ic:"🌳", c:"var(--sekitar)", desc:"Padang, laluan, tandas dan tempat tumpuan murid."}
+};
+const HARI = ["Isnin","Selasa","Rabu","Khamis","Jumaat"];
+const JADUAL = {
+  Isnin:  {kantin:"En. Suhaimi", blok:"En. Muhamad Nur Ikmal", surau:"En. Muhammad Asyraf Faiz", sekitar:"En. Muhammad Fattuhul Anuwar"},
+  Selasa: {kantin:"Pn. Sakinah", blok:"Cik Nor Maysarah", surau:"Pn. Siti Norazami", sekitar:"Cik Munaizah"},
+  Rabu:   {kantin:"Ustaz Asyraf", blok:"Pn. Azhana", surau:"En. Suhaimi", sekitar:"En. Muhamad Nur Ikmal"},
+  Khamis: {kantin:"En. Muhammad Asyraf Faiz", blok:"En. Muhammad Fattuhul Anuwar", surau:"Pn. Sakinah", sekitar:"Cik Nor Maysarah"},
+  Jumaat: {kantin:"Pn. Siti Norazami", blok:"Cik Munaizah", surau:"Ustaz Asyraf", sekitar:"Pn. Azhana"}
+};
+const GURU = [...new Set(HARI.flatMap(h => Object.values(JADUAL[h])))].sort((a,b)=>a.replace(/^\S+\s/,"").localeCompare(b.replace(/^\S+\s/,"")));
+
+const $ = s => document.querySelector(s);
+const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let me = store.get("mytugas_guru") || "";
+
+function hariIni(){ const d=new Date().getDay(); return d>=1&&d<=5 ? HARI[d-1] : null; }
+
+function dutyRow(key, who, showWho=true){
+  const t=TUGAS[key];
+  return `<div class="duty ${who===me?'mine':''}" style="--c:${t.c}">
+    <div class="ic">${t.ic}</div>
+    <div><b>${t.nama}</b><small>${t.desc}</small></div>
+    ${showWho?`<div class="who">${who}</div>`:''}
+  </div>`;
+}
+function dayList(h){ return Object.keys(TUGAS).map(k=>dutyRow(k, JADUAL[h][k])).join(""); }
+
+function renderHome(){
+  const h=hariIni();
+  const now=new Date();
+  $("#todayLbl").textContent = now.toLocaleDateString("ms-MY",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  $("#hello").textContent = me ? `Assalamualaikum, ${me}` : "Assalamualaikum — pilih nama anda di tab Tugas Saya";
+  if(!h){
+    $("#myToday").innerHTML = `<div class="empty">🌤️ Hari ini cuti hujung minggu. Tiada tugasan.</div>`;
+    $("#todayList").innerHTML = `<div class="empty">Jadual Isnin:</div>` + dayList("Isnin");
+    return;
+  }
+  const mine = me ? Object.keys(TUGAS).filter(k=>JADUAL[h][k]===me) : [];
+  $("#myToday").innerHTML = !me ? "" :
+    mine.length ? `<p class="hello" style="margin-top:10px">Tugas anda hari ini <span class="badge">BERTUGAS</span></p>` + mine.map(k=>dutyRow(k,me,false)).join("")
+                : `<div class="empty">✅ Anda tidak bertugas hari ini.</div>`;
+  $("#todayList").innerHTML = dayList(h);
+}
+
+function renderClock(){
+  const n=new Date(), m=n.getHours()*60+n.getMinutes();
+  const t=n.toLocaleTimeString("ms-MY",{hour:"2-digit",minute:"2-digit"});
+  let s="";
+  if(hariIni()){ s = m<420 ? "Tugas bermula 7.00 pagi" : m<=810 ? "🟢 Waktu bertugas (7.00 pg – 1.30 ptg)" : "Waktu bertugas tamat — jangan lupa isi laporan"; }
+  $("#clock").textContent = `🕒 ${t}${s?" · "+s:""}`;
+}
+
+let selDay = hariIni() || "Isnin";
+function renderJadual(){
+  const today=hariIni();
+  $("#dayTabs").innerHTML = HARI.map(h=>`<button class="${h===selDay?'on':''} ${h===today?'now':''}" data-d="${h}">${h}</button>`).join("");
+  $("#dayList").innerHTML = dayList(selDay);
+}
+$("#dayTabs").addEventListener("click",e=>{const d=e.target.dataset.d; if(d){selDay=d; renderJadual();}});
+
+function renderSaya(){
+  $("#guru").innerHTML = `<option value="">— Pilih —</option>` + GURU.map(g=>`<option ${g===me?'selected':''}>${g}</option>`).join("");
+  if(!me){ $("#myList").innerHTML = `<div class="empty">Pilih nama untuk lihat tugasan anda.</div>`; return; }
+  const rows = HARI.flatMap(h=>Object.keys(TUGAS).filter(k=>JADUAL[h][k]===me).map(k=>({h,k})));
+  $("#myList").innerHTML = rows.map(({h,k})=>{const t=TUGAS[k]; return `<div class="duty ${h===hariIni()?'mine':''}" style="--c:${t.c}">
+    <div class="ic">${t.ic}</div><div><b>${h}${h===hariIni()?'<span class="badge">HARI INI</span>':''}</b><small>${t.nama} · 7.00 pg – 1.30 ptg</small></div></div>`}).join("");
+}
+$("#guru").addEventListener("change",e=>{me=e.target.value; store.set("mytugas_guru",me); renderAll();});
+
+function renderAll(){ renderHome(); renderJadual(); renderSaya(); renderClock(); }
+
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
+  scrollTo(0,0);
+}));
+
+$("#btnLapor").href = FORM_URL;
+renderAll();
+setInterval(renderClock, 30000);
+
+// PWA
+let deferred;
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferred=e;$("#install").style.display="flex";});
+$("#install").addEventListener("click",async()=>{if(!deferred)return;deferred.prompt();await deferred.userChoice;deferred=null;$("#install").style.display="none";});
+if("serviceWorker" in navigator){ addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{})); }
+</script>
+</body>
+</html>
