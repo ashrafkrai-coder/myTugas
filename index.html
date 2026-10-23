@@ -143,7 +143,7 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
     <div class="card">
       <h2>Pasang aplikasi</h2>
       <p class="hello">Android/Chrome: tekan butang di bawah atau buka menu pelayar dan pilih <b>Tambah ke skrin utama</b>.<br>iPhone (Safari): buka menu Kongsi dan pilih <b>Add to Home Screen</b>.</p>
-      <button class="btn alt" id="install"><svg aria-hidden="true"><use href="#i-report"></use></svg>Pasang myTugas</button>
+      <button class="btn alt" id="install"><svg aria-hidden="true"><use href="#i-home"></use></svg>Pasang myTugas</button>
     </div>
     <p class="foot">#MagnificentMedanians</p>
   </section>
@@ -236,7 +236,7 @@ $("#guru").addEventListener("change",e=>{me=e.target.value; store.set("mytugas_g
 function renderAll(){ renderHome(); renderJadual(); renderSaya(); renderClock(); }
 
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("nav button").forEach(x=>x.classList.toggle("on",x===b));
+  document.querySelectorAll("nav button").forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-current",x===b?"page":"false")});
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
   scrollTo(0,0);
 }));

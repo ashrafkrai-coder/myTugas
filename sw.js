@@ -1,4 +1,4 @@
-const CACHE = "mytugas-v2";
+const CACHE = "mytugas-v3";
 const FILES = ["./", "index.html", "manifest.json", "logo.png", "icon-192.png", "icon-512.png"];
 
 self.addEventListener("install", e => {
