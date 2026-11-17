@@ -7,10 +7,13 @@
 <meta name="description" content="Jadual Guru Bertugas SMK Taman Medan 2026">
 <meta name="theme-color" content="#142b4a">
 <link rel="manifest" href="manifest.json">
-<link rel="icon" href="icon-192.png">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="myTugas">
+<script src="auth.js"></script>
+<script>if (!window.myTugasAuth || !myTugasAuth.isAuthenticated()) location.replace("login.html");</script>
 <style>
 :root{
   color-scheme:light;
@@ -50,8 +53,9 @@ main{max-width:820px;margin:0 auto;padding:22px 18px 28px}
 .btn svg{width:18px;height:18px}
 .btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
 .btn.alt{border-color:transparent;background:var(--brand);color:#fff;box-shadow:none}
-select{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.94rem;outline:none}
-select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand2) 14%,transparent)}
+select,input,textarea{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.94rem;font-family:inherit;outline:none}
+textarea{min-height:76px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand2) 14%,transparent)}
 label{font-size:.8rem;color:var(--mute);display:block;margin-bottom:8px;font-weight:600}
 .days{display:flex;gap:8px;overflow-x:auto;margin-bottom:14px;scrollbar-width:none;padding:2px}
 .days button{flex:1;min-width:64px;padding:11px 8px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--mute);font-weight:600;font-size:.82rem;cursor:pointer;transition:all .18s ease}
@@ -73,6 +77,22 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
 .motto{text-align:center;font-style:italic;color:var(--mute);font-size:.82rem;line-height:1.5;margin:15px 0 5px}
 .foot{text-align:center;color:var(--mute);font-size:.72rem;margin-top:10px;letter-spacing:.04em}
 #install{display:none}
+.field{margin-bottom:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.msg{margin-top:12px;font-size:.84rem;line-height:1.5;text-align:center}
+.msg.ok{color:#2f7d5b}.msg.err{color:#b4474a}
+.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn.ghost{background:none;border-color:var(--line);color:var(--mute);box-shadow:none;margin-top:10px}
+.sync{text-align:center;color:var(--mute);font-size:.7rem;margin-top:6px}
+.swap{font-size:.6rem;font-weight:750;letter-spacing:.05em;color:var(--accent);display:block}
+.profile{display:flex;align-items:center;gap:14px}
+.profile b{display:block;font-size:.98rem;font-weight:700}
+.profile small{display:block;color:var(--mute);font-size:.78rem;margin-top:2px}
+.avatar{flex:0 0 46px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#dfc58f;font-weight:750;font-size:1rem}
+.logout{margin-left:auto;padding:9px 13px;border-radius:11px;border:1px solid var(--line);background:none;color:var(--mute);font-weight:650;font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap}
+.logout:hover{color:var(--ink);border-color:var(--mute)}
+input[readonly]{background:color-mix(in srgb,var(--bg) 70%,var(--card));color:var(--mute)}
+@media(max-width:420px){.row2{grid-template-columns:1fr}}
 @media(min-width:700px){main{padding-top:28px}.view#v-home.on{display:grid;grid-template-columns:1.1fr .9fr;align-items:start;gap:16px}.view#v-home>.card{margin-bottom:0}.card{padding:24px}}
 @media(max-width:420px){header{padding-left:17px;padding-right:17px}main{padding:16px 13px 24px}.card{padding:17px;border-radius:17px}.today{font-size:1.25rem}.duty{gap:11px;padding:12px}.duty .ic{flex-basis:38px;width:38px;height:38px}.duty .who{font-size:.79rem}}
 </style>
@@ -92,7 +112,7 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
 <header>
   <div class="header-inner">
     <img src="logo.png" alt="Logo SMK Taman Medan">
-    <div><div class="eyebrow">Pengurusan Guru Bertugas</div><h1>myTugas</h1><p>SMK Taman Medan <span aria-hidden="true">·</span> 2026</p></div>
+    <div><div class="eyebrow">Pengurusan Guru Bertugas</div><h1>myTugas</h1><p id="sekolah">SMK Taman Medan · 2026</p></div>
   </div>
 </header>
 
@@ -104,7 +124,7 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
       <div class="today" id="todayLbl">—</div>
       <div class="clock" id="clock"></div>
       <div id="myToday"></div>
-      <a class="btn" id="btnLapor" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-report"></use></svg>Isi Laporan Bertugas</a>
+      <button class="btn" id="btnLapor" type="button"><svg aria-hidden="true"><use href="#i-report"></use></svg>Isi Laporan Bertugas</button>
     </div>
     <div class="card">
       <h2>Guru bertugas hari ini</h2>
@@ -120,9 +140,10 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
 
   <!-- TUGAS SAYA -->
   <section class="view" id="v-saya">
-    <div class="card">
-      <label for="guru">Pilih nama anda</label>
-      <select id="guru"></select>
+    <div class="card profile">
+      <div class="avatar" id="avatar" aria-hidden="true"></div>
+      <div><b id="profNama"></b><small id="profUser"></small></div>
+      <button class="logout" id="btnLogout" type="button">Log Keluar</button>
     </div>
     <div class="card"><h2>Tugasan mingguan saya</h2><div id="myList"></div></div>
   </section>
@@ -131,21 +152,40 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
   <section class="view" id="v-info">
     <div class="card">
       <h2>Catatan</h2>
-      <ul class="notes">
-        <li>Guru bertugas berada di stesen tugas mulai pukul 7.00 pagi hingga 1.30 petang.</li>
-        <li>Memastikan murid mematuhi peraturan sekolah.</li>
-        <li>Merekod dan melaporkan sebarang salah laku kepada Unit Disiplin / PK HEM.</li>
-        <li>Bekerjasama menjaga kebersihan, keselamatan dan persekitaran sekolah.</li>
-        <li>Sebarang pertukaran jadual hendaklah dimaklumkan kepada PK HEM.</li>
-      </ul>
-      <p class="motto">“Disiplin Tanggungjawab, Sekolah Bersih, Murid Berjaya”</p>
+      <ul class="notes" id="notes"></ul>
+      <p class="motto" id="motto"></p>
     </div>
     <div class="card">
       <h2>Pasang aplikasi</h2>
       <p class="hello">Android/Chrome: tekan butang di bawah atau buka menu pelayar dan pilih <b>Tambah ke skrin utama</b>.<br>iPhone (Safari): buka menu Kongsi dan pilih <b>Add to Home Screen</b>.</p>
       <button class="btn alt" id="install"><svg aria-hidden="true"><use href="#i-home"></use></svg>Pasang myTugas</button>
     </div>
-    <p class="foot">#MagnificentMedanians</p>
+    <p class="foot" id="hashtag"></p>
+    <p class="sync" id="sync"></p>
+  </section>
+
+  <!-- LAPORAN -->
+  <section class="view" id="v-lapor">
+    <form class="card" id="formLapor" novalidate>
+      <h2>Laporan Bertugas</h2>
+      <div class="row2">
+        <div class="field"><label for="lpTarikh">Tarikh</label><input type="date" id="lpTarikh" required></div>
+        <div class="field"><label for="lpLokasi">Lokasi</label><select id="lpLokasi" required></select></div>
+      </div>
+      <div class="field"><label for="lpGuru">Nama guru</label><input id="lpGuru" readonly></div>
+      <div class="row2">
+        <div class="field"><label for="lpHadir">Status kehadiran</label>
+          <select id="lpHadir"><option>Hadir</option><option>Diganti</option><option>Tidak Hadir</option></select></div>
+        <div class="field"><label for="lpBersih">Kebersihan</label>
+          <select id="lpBersih"><option>Baik</option><option>Sederhana</option><option>Kurang Memuaskan</option></select></div>
+      </div>
+      <div class="field"><label for="lpIsu">Isu / salah laku (jika ada)</label><textarea id="lpIsu" maxlength="1000"></textarea></div>
+      <div class="field"><label for="lpTindakan">Tindakan diambil</label><textarea id="lpTindakan" maxlength="1000"></textarea></div>
+      <div class="field"><label for="lpCatatan">Catatan lain</label><textarea id="lpCatatan" maxlength="1000"></textarea></div>
+      <button class="btn" id="lpHantar" type="submit"><svg aria-hidden="true"><use href="#i-report"></use></svg>Hantar Laporan</button>
+      <button class="btn ghost" id="lpBatal" type="button">Kembali</button>
+      <p class="msg" id="lpMsg" role="status" aria-live="polite"></p>
+    </form>
   </section>
 </main>
 
@@ -157,62 +197,129 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
 </nav>
 
 <script>
-const FORM_URL = "https://forms.gle/Vf7R4QcLpeC8vjze9";
+// URL Web App ditetapkan dalam auth.js
+const AUTH = window.myTugasAuth;
+const USER = (AUTH && AUTH.currentUser()) || {username:"", nama:""};
 
-const TUGAS = {
-  kantin:  {nama:"Kantin", ic:"store", c:"var(--kantin)", desc:"Pemantauan kawasan kantin, disiplin murid dan kebersihan."},
-  blok:    {nama:"Blok Kelas", ic:"building", c:"var(--blok)", desc:"Pemantauan disiplin murid di blok kelas."},
-  surau:   {nama:"Surau", ic:"landmark", c:"var(--surau)", desc:"Pemantauan aktiviti, disiplin dan kebersihan surau."},
-  sekitar: {nama:"Persekitaran Sekolah", ic:"tree", c:"var(--sekitar)", desc:"Padang, laluan, tandas dan tempat tumpuan murid."}
-};
 const HARI = ["Isnin","Selasa","Rabu","Khamis","Jumaat"];
-const JADUAL = {
-  Isnin:  {kantin:"En. Suhaimi", blok:"En. Muhamad Nur Ikmal", surau:"En. Muhammad Asyraf Faiz", sekitar:"En. Muhammad Fattuhul Anuwar"},
-  Selasa: {kantin:"Pn. Sakinah", blok:"Cik Nor Maysarah", surau:"Pn. Siti Norazami", sekitar:"Cik Munaizah"},
-  Rabu:   {kantin:"Ust Ashraf", blok:"Pn. Azhana", surau:"En. Suhaimi", sekitar:"En. Muhamad Nur Ikmal"},
-  Khamis: {kantin:"En. Muhammad Asyraf Faiz", blok:"En. Muhammad Fattuhul Anuwar", surau:"Pn. Sakinah", sekitar:"Cik Nor Maysarah"},
-  Jumaat: {kantin:"Pn. Siti Norazami", blok:"Cik Munaizah", surau:"Ust Ashraf", sekitar:"Pn. Azhana"}
-};
-const GURU = [...new Set(HARI.flatMap(h => Object.values(JADUAL[h])))].sort((a,b)=>a.replace(/^\S+\s/,"").localeCompare(b.replace(/^\S+\s/,"")));
+const IKON_SAH = ["store","building","landmark","tree"];
+const WARNA = {kantin:"var(--kantin)", blok:"var(--blok)", surau:"var(--surau)", sekitar:"var(--sekitar)"};
+const PALET = ["#7a6aa6","#4e8a9a","#9a6a4e","#6a8a4e"];
+
+// Data asal: dipakai sebelum Google Sheet disambung, atau kali pertama dibuka tanpa internet
+const DEFAULT_DATA = (()=>{
+  const j = {
+    Isnin:  ["En. Suhaimi","En. Muhamad Nur Ikmal","En. Muhammad Asyraf Faiz","En. Muhammad Fattuhul Anuwar"],
+    Selasa: ["Pn. Sakinah","Cik Nor Maysarah","Pn. Siti Norazami","Cik Munaizah"],
+    Rabu:   ["Ust Ashraf","Pn. Azhana","En. Suhaimi","En. Muhamad Nur Ikmal"],
+    Khamis: ["En. Muhammad Asyraf Faiz","En. Muhammad Fattuhul Anuwar","Pn. Sakinah","Cik Nor Maysarah"],
+    Jumaat: ["Pn. Siti Norazami","Cik Munaizah","Ust Ashraf","Pn. Azhana"]
+  };
+  const kod = ["kantin","blok","surau","sekitar"];
+  const jadual = HARI.flatMap(h=>j[h].map((g,i)=>({hari:h, kod:kod[i], guru:g})));
+  return {
+    guru: [...new Set(jadual.map(r=>r.guru))].map(nama=>({nama})),
+    lokasi: [
+      {kod:"kantin", nama:"Kantin", ikon:"store", desc:"Pemantauan kawasan kantin, disiplin murid dan kebersihan."},
+      {kod:"blok", nama:"Blok Kelas", ikon:"building", desc:"Pemantauan disiplin murid di blok kelas."},
+      {kod:"surau", nama:"Surau", ikon:"landmark", desc:"Pemantauan aktiviti, disiplin dan kebersihan surau."},
+      {kod:"sekitar", nama:"Persekitaran Sekolah", ikon:"tree", desc:"Padang, laluan, tandas dan tempat tumpuan murid."}
+    ],
+    jadual,
+    pertukaran: [],
+    tetapan: {nama_sekolah:"SMK Taman Medan", tahun:"2026", masa_mula:"07:00", masa_tamat:"13:30",
+      url_laporan:"https://forms.gle/Vf7R4QcLpeC8vjze9",
+      motto:"Disiplin Tanggungjawab, Sekolah Bersih, Murid Berjaya", hashtag:"#MagnificentMedanians"},
+    catatan: [
+      "Guru bertugas berada di stesen tugas mulai pukul 7.00 pagi hingga 1.30 petang.",
+      "Memastikan murid mematuhi peraturan sekolah.",
+      "Merekod dan melaporkan sebarang salah laku kepada Unit Disiplin / PK HEM.",
+      "Bekerjasama menjaga kebersihan, keselamatan dan persekitaran sekolah.",
+      "Sebarang pertukaran jadual hendaklah dimaklumkan kepada PK HEM."
+    ]
+  };
+})();
 
 const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const store = {get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-let me = store.get("mytugas_guru") || "";
+let me = USER.nama || "";
+
+// Keadaan yang dibina daripada data
+let D, TUGAS = [], JADUAL = {}, GURU = [], MULA = 420, TAMAT = 810;
+
+function sahData(d){ return d && Array.isArray(d.lokasi) && d.lokasi.length && Array.isArray(d.jadual) && Array.isArray(d.guru); }
+function minit(s, def){ const m=/^(\d{1,2}):(\d{2})$/.exec(String(s||"").trim()); return m ? +m[1]*60 + +m[2] : def; }
+function fmtMasa(m){ const h=Math.floor(m/60), mm=String(m%60).padStart(2,"0"); return `${h>12?h-12:h}.${mm} ${h<12?"pg":"ptg"}`; }
+const masaLabel = () => `${fmtMasa(MULA)} – ${fmtMasa(TAMAT)}`;
+
+function apply(d){
+  D = d;
+  TUGAS = d.lokasi.map((l,i)=>({
+    kod:l.kod, nama:l.nama, desc:l.desc||"",
+    ic: IKON_SAH.includes(l.ikon) ? l.ikon : "building",
+    c: WARNA[l.kod] || PALET[i % PALET.length]
+  }));
+  JADUAL = Object.fromEntries(HARI.map(h=>[h,{}]));
+  d.jadual.forEach(r=>{ if(JADUAL[r.hari]) (JADUAL[r.hari][r.kod] ||= []).push(r.guru); });
+  const surname = s => s.replace(/^\S+\s/,"");
+  GURU = [...new Set(d.guru.map(g=>g.nama))].sort((a,b)=>surname(a).localeCompare(surname(b)));
+  const t = d.tetapan || {};
+  MULA = minit(t.masa_mula, 420); TAMAT = minit(t.masa_tamat, 810);
+  $("#sekolah").textContent = [t.nama_sekolah, t.tahun].filter(Boolean).join(" · ");
+  $("#notes").innerHTML = (d.catatan||[]).map(c=>`<li>${esc(c)}</li>`).join("");
+  $("#motto").textContent = t.motto ? `“${t.motto}”` : "";
+  $("#hashtag").textContent = t.hashtag || "";
+  renderAll();
+}
 
 function hariIni(){ const d=new Date().getDay(); return d>=1&&d<=5 ? HARI[d-1] : null; }
+function isoHariIni(){ const n=new Date(); return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
 
-function dutyRow(key, who, showWho=true){
-  const t=TUGAS[key];
-  return `<div class="duty ${who===me?'mine':''}" style="--c:${t.c}">
+// Senarai guru untuk satu lokasi; jika tarikh diberi, pertukaran yang diluluskan diambil kira
+function guruDi(h, kod, iso){
+  const base = (JADUAL[h] && JADUAL[h][kod]) || [];
+  if(!iso) return base.map(n=>({n}));
+  const tukar = (D.pertukaran||[]).filter(p=>p.tarikh===iso && p.kod===kod);
+  return base.map(n=>{ const p=tukar.find(x=>x.asal===n); return p ? {n:p.ganti, asal:n} : {n}; });
+}
+
+function dutyRow(t, list, showWho=true){
+  const mine = list.some(x=>x.n===me);
+  const who = list.length ? list.map(x=>x.asal ? `<span class="swap">GANTI</span>${esc(x.n)}` : esc(x.n)).join("<br>") : "–";
+  return `<div class="duty ${mine?'mine':''}" style="--c:${t.c}">
     <div class="ic"><svg aria-hidden="true"><use href="#i-${t.ic}"></use></svg></div>
-    <div><b>${t.nama}</b><small>${t.desc}</small></div>
+    <div><b>${esc(t.nama)}</b><small>${esc(t.desc)}</small></div>
     ${showWho?`<div class="who">${who}</div>`:''}
   </div>`;
 }
-function dayList(h){ return Object.keys(TUGAS).map(k=>dutyRow(k, JADUAL[h][k])).join(""); }
+function dayList(h, iso){ return TUGAS.map(t=>dutyRow(t, guruDi(h, t.kod, iso))).join(""); }
+function tugasSayaHariIni(){
+  const h=hariIni(); if(!h || !me) return [];
+  return TUGAS.filter(t=>guruDi(h, t.kod, isoHariIni()).some(x=>x.n===me));
+}
 
 function renderHome(){
   const h=hariIni();
-  const now=new Date();
-  $("#todayLbl").textContent = now.toLocaleDateString("ms-MY",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  $("#hello").textContent = me ? `Assalamualaikum, ${me}` : "Assalamualaikum — pilih nama anda di tab Tugas Saya";
+  $("#todayLbl").textContent = new Date().toLocaleDateString("ms-MY",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  $("#hello").textContent = `Assalamualaikum, ${me}`;
   if(!h){
     $("#myToday").innerHTML = `<div class="empty">Hari ini cuti hujung minggu. Tiada tugasan.</div>`;
     $("#todayList").innerHTML = `<div class="empty">Jadual Isnin:</div>` + dayList("Isnin");
     return;
   }
-  const mine = me ? Object.keys(TUGAS).filter(k=>JADUAL[h][k]===me) : [];
+  const mine = tugasSayaHariIni();
   $("#myToday").innerHTML = !me ? "" :
-    mine.length ? `<p class="hello" style="margin-top:10px">Tugas anda hari ini <span class="badge">BERTUGAS</span></p>` + mine.map(k=>dutyRow(k,me,false)).join("")
+    mine.length ? `<p class="hello" style="margin-top:10px">Tugas anda hari ini <span class="badge">BERTUGAS</span></p>` + mine.map(t=>dutyRow(t,[{n:me}],false)).join("")
                 : `<div class="empty">Anda tidak bertugas hari ini.</div>`;
-  $("#todayList").innerHTML = dayList(h);
+  $("#todayList").innerHTML = dayList(h, isoHariIni());
 }
 
 function renderClock(){
   const n=new Date(), m=n.getHours()*60+n.getMinutes();
   const t=n.toLocaleTimeString("ms-MY",{hour:"2-digit",minute:"2-digit"});
   let s="";
-  if(hariIni()){ s = m<420 ? "Tugas bermula 7.00 pagi" : m<=810 ? "Waktu bertugas (7.00 pg – 1.30 ptg)" : "Waktu bertugas tamat — jangan lupa isi laporan"; }
+  if(hariIni()){ s = m<MULA ? `Tugas bermula ${fmtMasa(MULA)}` : m<=TAMAT ? `Waktu bertugas (${masaLabel()})` : "Waktu bertugas tamat. Jangan lupa isi laporan."; }
   $("#clock").textContent = `${t}${s?" · "+s:""}`;
 }
 
@@ -220,29 +327,93 @@ let selDay = hariIni() || "Isnin";
 function renderJadual(){
   const today=hariIni();
   $("#dayTabs").innerHTML = HARI.map(h=>`<button class="${h===selDay?'on':''} ${h===today?'now':''}" data-d="${h}">${h}</button>`).join("");
-  $("#dayList").innerHTML = dayList(selDay);
+  $("#dayList").innerHTML = dayList(selDay, selDay===today ? isoHariIni() : null);
 }
 $("#dayTabs").addEventListener("click",e=>{const d=e.target.dataset.d; if(d){selDay=d; renderJadual();}});
 
 function renderSaya(){
-  $("#guru").innerHTML = `<option value="">— Pilih —</option>` + GURU.map(g=>`<option ${g===me?'selected':''}>${g}</option>`).join("");
-  if(!me){ $("#myList").innerHTML = `<div class="empty">Pilih nama untuk lihat tugasan anda.</div>`; return; }
-  const rows = HARI.flatMap(h=>Object.keys(TUGAS).filter(k=>JADUAL[h][k]===me).map(k=>({h,k})));
-  $("#myList").innerHTML = rows.map(({h,k})=>{const t=TUGAS[k]; return `<div class="duty ${h===hariIni()?'mine':''}" style="--c:${t.c}">
-    <div class="ic"><svg aria-hidden="true"><use href="#i-${t.ic}"></use></svg></div><div><b>${h}${h===hariIni()?'<span class="badge">HARI INI</span>':''}</b><small>${t.nama} · 7.00 pg – 1.30 ptg</small></div></div>`}).join("");
+  $("#profNama").textContent = me;
+  $("#profUser").textContent = USER.username ? `@${USER.username}` : "";
+  $("#avatar").textContent = me.replace(/^\S+\s/,"").split(/\s+/).slice(0,2).map(w=>w[0]||"").join("").toUpperCase();
+  const today=hariIni();
+  const rows = HARI.flatMap(h=>TUGAS.filter(t=>(JADUAL[h][t.kod]||[]).includes(me)).map(t=>({h,t})));
+  let html = rows.map(({h,t})=>`<div class="duty ${h===today?'mine':''}" style="--c:${t.c}">
+    <div class="ic"><svg aria-hidden="true"><use href="#i-${t.ic}"></use></svg></div><div><b>${h}${h===today?'<span class="badge">HARI INI</span>':''}</b><small>${esc(t.nama)} · ${masaLabel()}</small></div></div>`).join("");
+  if(!rows.length) html = `<div class="empty">Tiada tugasan mingguan untuk nama ini.</div>`;
+  // Pertukaran yang melibatkan guru ini, mulai hari ini
+  const iso=isoHariIni();
+  const tukar=(D.pertukaran||[]).filter(p=>p.tarikh>=iso && (p.asal===me || p.ganti===me)).sort((a,b)=>a.tarikh.localeCompare(b.tarikh));
+  if(tukar.length){
+    html += `<h2 style="margin-top:20px">Pertukaran tugas</h2>` + tukar.map(p=>{
+      const t=TUGAS.find(x=>x.kod===p.kod) || {nama:p.kod, ic:"building", c:"var(--mute)"};
+      const tgl=new Date(p.tarikh+"T00:00").toLocaleDateString("ms-MY",{weekday:"long",day:"numeric",month:"short"});
+      const ket = p.ganti===me ? `Anda menggantikan ${esc(p.asal)}` : `Diganti oleh ${esc(p.ganti)}`;
+      return `<div class="duty" style="--c:${t.c}"><div class="ic"><svg aria-hidden="true"><use href="#i-${t.ic}"></use></svg></div><div><b>${esc(tgl)}</b><small>${esc(t.nama)} · ${ket}</small></div></div>`;
+    }).join("");
+  }
+  $("#myList").innerHTML = html;
 }
-$("#guru").addEventListener("change",e=>{me=e.target.value; store.set("mytugas_guru",me); renderAll();});
+$("#btnLogout").addEventListener("click",()=>{ try{localStorage.removeItem("mytugas_data")}catch(e){} AUTH.signOut(); });
 
 function renderAll(){ renderHome(); renderJadual(); renderSaya(); renderClock(); }
 
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
-  document.querySelectorAll("nav button").forEach(x=>{x.classList.toggle("on",x===b);x.setAttribute("aria-current",x===b?"page":"false")});
-  document.querySelectorAll(".view").forEach(v=>v.classList.toggle("on",v.id==="v-"+b.dataset.v));
+function showView(v){
+  document.querySelectorAll("nav button").forEach(x=>{const on=x.dataset.v===v; x.classList.toggle("on",on); x.setAttribute("aria-current",on?"page":"false")});
+  document.querySelectorAll(".view").forEach(s=>s.classList.toggle("on",s.id==="v-"+v));
   scrollTo(0,0);
-}));
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.v)));
 
-$("#btnLapor").href = FORM_URL;
-renderAll();
+// ---------- Laporan ----------
+$("#btnLapor").addEventListener("click",()=>{
+  $("#lpTarikh").value = isoHariIni();
+  $("#lpGuru").value = me;
+  const kodSaya = (tugasSayaHariIni()[0]||{}).kod;
+  $("#lpLokasi").innerHTML = TUGAS.map(t=>`<option value="${esc(t.kod)}" ${t.kod===kodSaya?'selected':''}>${esc(t.nama)}</option>`).join("");
+  $("#lpMsg").textContent=""; $("#lpMsg").className="msg";
+  showView("lapor");
+});
+$("#lpBatal").addEventListener("click",()=>showView("home"));
+$("#formLapor").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const msg=$("#lpMsg"), btn=$("#lpHantar");
+  const body = {tarikh:$("#lpTarikh").value, kod:$("#lpLokasi").value,
+    kehadiran:$("#lpHadir").value, kebersihan:$("#lpBersih").value,
+    isu:$("#lpIsu").value.trim(), tindakan:$("#lpTindakan").value.trim(), catatan:$("#lpCatatan").value.trim()};
+  if(!body.tarikh || !body.kod){ msg.className="msg err"; msg.textContent="Sila isi tarikh dan lokasi."; return; }
+  btn.disabled=true; msg.className="msg"; msg.textContent="Menghantar…";
+  try{
+    await AUTH.call("laporan", body);
+    msg.className="msg ok"; msg.textContent="Laporan berjaya dihantar. Terima kasih.";
+    ["#lpIsu","#lpTindakan","#lpCatatan"].forEach(s=>$(s).value="");
+  }catch(err){
+    msg.className="msg err";
+    msg.textContent = err.code==="NETWORK" || !navigator.onLine ? "Tiada sambungan internet. Cuba lagi bila dalam talian." : `Gagal menghantar: ${err.message}`;
+  }finally{ btn.disabled=false; }
+});
+
+// ---------- Muat data ----------
+function setSync(t){ $("#sync").textContent = t; }
+let cached=null;
+try{ cached = JSON.parse(store.get("mytugas_data")||"null"); }catch(e){}
+if(sahData(cached)){ apply(cached); setSync(`Data simpanan: ${new Date(cached.dikemaskini||0).toLocaleString("ms-MY")}`); }
+else { apply(DEFAULT_DATA); setSync("Memuatkan data…"); }
+
+async function muatData(){
+  if(!AUTH || !AUTH.isAuthenticated()) return;
+  try{
+    const j = await AUTH.call("data", {});
+    if(!sahData(j.data)) throw new Error("Data tidak sah");
+    store.set("mytugas_data", JSON.stringify(j.data));
+    if(j.saya && j.saya!==me){ me=j.saya; AUTH.setNama(me); }
+    apply(j.data);
+    setSync(`Data dikemas kini: ${new Date(j.data.dikemaskini).toLocaleString("ms-MY")}`);
+  }catch(err){
+    setSync(sahData(cached) ? `Luar talian. Data simpanan: ${new Date(cached.dikemaskini||0).toLocaleString("ms-MY")}` : "Gagal memuatkan data. Memaparkan data asal.");
+  }
+}
+muatData();
+addEventListener("online", muatData);
 setInterval(renderClock, 30000);
 
 // PWA

@@ -1,5 +1,5 @@
-const CACHE = "mytugas-v3";
-const FILES = ["./", "index.html", "manifest.json", "logo.png", "icon-192.png", "icon-512.png"];
+const CACHE = "mytugas-v6";
+const FILES = ["./", "index.html", "login.html", "auth.js", "manifest.json", "logo.png", "icon-192.png", "icon-512.png", "icon.svg"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));

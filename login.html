@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>myTugas · Log Masuk</title>
+<meta name="theme-color" content="#142b4a">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="myTugas">
+<script src="auth.js"></script>
+<script>if (window.myTugasAuth && myTugasAuth.isAuthenticated()) location.replace("index.html");</script>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f4f6fa;--card:#fff;--ink:#17243a;--mute:#718096;--line:#e5e9f0;--brand:#142b4a;--brand2:#1d466d;--accent:#caa968;
+  --err-bg:#fdf0f0;--err-line:#f1c9ca;--err:#a83c40;
+}
+@media (prefers-color-scheme:dark){:root{
+  color-scheme:dark;
+  --bg:#101722;--card:#182230;--ink:#edf1f7;--mute:#a3afbf;--line:#2a3747;--brand2:#8baecb;--accent:#d7b979;
+  --err-bg:#3a1f24;--err-line:#5c2d33;--err:#f1a9ad;
+}}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased;
+  background:linear-gradient(180deg,#10243c 0,#183b5b 260px,var(--bg) 260px);
+  display:flex;flex-direction:column;align-items:center;padding:calc(34px + env(safe-area-inset-top)) 16px 32px}
+.brand{display:flex;flex-direction:column;align-items:center;text-align:center;color:#fff;margin-bottom:22px}
+.brand img{width:68px;height:72px;object-fit:contain;background:#fff;border-radius:18px;padding:6px;box-shadow:0 6px 20px rgba(0,0,0,.18);margin-bottom:12px}
+.eyebrow{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#dfc58f;margin-bottom:4px}
+.brand h1{font-size:1.6rem;font-weight:750}
+.brand p{font-size:.8rem;opacity:.78;margin-top:3px}
+.card{width:min(100%,420px);background:var(--card);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 14px 34px rgba(23,36,58,.12)}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:3px;margin-bottom:20px;background:color-mix(in srgb,var(--bg) 80%,var(--card));border:1px solid var(--line);border-radius:13px}
+.tabs button{padding:10px;border:0;border-radius:10px;background:none;color:var(--mute);font-weight:650;font-size:.86rem;cursor:pointer;font-family:inherit}
+.tabs button[aria-selected="true"]{background:var(--brand);color:#fff;box-shadow:0 3px 10px rgba(20,43,74,.2)}
+.field{margin-bottom:14px}
+label{display:block;font-size:.74rem;font-weight:650;color:var(--mute);margin-bottom:7px;letter-spacing:.02em}
+input,select{width:100%;padding:13px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:.95rem;font-family:inherit;outline:none}
+input:focus,select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px color-mix(in srgb,var(--brand2) 14%,transparent)}
+small{display:block;margin-top:5px;font-size:.72rem;color:var(--mute);line-height:1.45}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;padding:14px 16px;border:1px solid #d1b576;border-radius:13px;background:linear-gradient(135deg,#dfc58f,#c5a560);color:#243247;font-weight:700;font-size:.92rem;font-family:inherit;cursor:pointer;margin-top:6px;box-shadow:0 5px 14px rgba(173,139,76,.2)}
+.btn:disabled{opacity:.6;cursor:wait}
+.status{margin-top:14px;padding:12px 14px;border-radius:12px;background:color-mix(in srgb,var(--bg) 70%,var(--card));color:var(--mute);font-size:.84rem;line-height:1.5}
+.status:empty{display:none}
+.status[data-state="error"]{background:var(--err-bg);border:1px solid var(--err-line);color:var(--err)}
+.foot{margin-top:18px;color:var(--mute);font-size:.72rem;text-align:center}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+  <div class="brand">
+    <img src="logo.png" alt="Logo SMK Taman Medan">
+    <div class="eyebrow">Pengurusan Guru Bertugas</div>
+    <h1>myTugas</h1>
+    <p>SMK Taman Medan</p>
+  </div>
+
+  <section class="card">
+    <div class="tabs" role="tablist">
+      <button id="tab-login" type="button" role="tab" aria-selected="true" aria-controls="login-form">Log Masuk</button>
+      <button id="tab-register" type="button" role="tab" aria-selected="false" aria-controls="register-form">Daftar Akaun</button>
+    </div>
+
+    <form id="login-form" autocomplete="on">
+      <div class="field"><label for="login-username">Username</label>
+        <input id="login-username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required></div>
+      <div class="field"><label for="login-password">Kata laluan</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required></div>
+      <button class="btn" type="submit">Log Masuk</button>
+    </form>
+
+    <form id="register-form" autocomplete="on" hidden>
+      <div class="field"><label for="reg-guru">Nama guru</label>
+        <select id="reg-guru" name="idGuru" required><option value="">Memuatkan senarai…</option></select>
+        <small>Pilih nama anda seperti dalam jadual bertugas.</small></div>
+      <div class="field"><label for="reg-username">Username</label>
+        <input id="reg-username" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" pattern="[a-zA-Z0-9._]{3,30}" title="3-30 aksara: huruf, nombor, titik atau garis bawah" required>
+        <small>Huruf, nombor, titik atau garis bawah (3-30 aksara).</small></div>
+      <div class="field"><label for="reg-password">Kata laluan</label>
+        <input id="reg-password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="72" required>
+        <small>Sekurang-kurangnya 8 aksara.</small></div>
+      <div class="field"><label for="reg-password2">Sahkan kata laluan</label>
+        <input id="reg-password2" name="password2" type="password" autocomplete="new-password" minlength="8" maxlength="72" required></div>
+      <div class="field"><label for="reg-kod">Kod pendaftaran sekolah</label>
+        <input id="reg-kod" name="kodDaftar" type="password" autocomplete="off" required>
+        <small>Dapatkan kod ini daripada pentadbir sekolah.</small></div>
+      <button class="btn" type="submit">Daftar &amp; Log Masuk</button>
+    </form>
+
+    <div id="status" class="status" role="status" aria-live="polite"></div>
+  </section>
+  <p class="foot">#MagnificentMedanians</p>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const auth = window.myTugasAuth;
+  const loginForm = $("login-form"), registerForm = $("register-form");
+  const tabLogin = $("tab-login"), tabRegister = $("tab-register");
+  let guruLoaded = false;
+
+  function setStatus(msg, isError) {
+    $("status").textContent = msg;
+    $("status").dataset.state = isError ? "error" : "info";
+  }
+
+  async function loadGuru() {
+    const sel = $("reg-guru");
+    try {
+      const r = await auth.call("senarai_guru", {});
+      guruLoaded = true;
+      if (!r.guru.length) {
+        sel.innerHTML = `<option value="">Semua guru sudah berdaftar</option>`;
+        return;
+      }
+      sel.innerHTML = `<option value="">— Pilih nama —</option>`;
+      r.guru.forEach(g => { const o = document.createElement("option"); o.value = g.id; o.textContent = g.nama; sel.appendChild(o); });
+    } catch (e) {
+      sel.innerHTML = `<option value="">Gagal memuatkan senarai</option>`;
+      setStatus(e.message, true);
+    }
+  }
+
+  function showTab(name) {
+    const isLogin = name === "login";
+    loginForm.hidden = !isLogin;
+    registerForm.hidden = isLogin;
+    tabLogin.setAttribute("aria-selected", String(isLogin));
+    tabRegister.setAttribute("aria-selected", String(!isLogin));
+    setStatus(isLogin ? "Masukkan username dan kata laluan." : "Daftar akaun guru. Kod pendaftaran diberi oleh pentadbir sekolah.", false);
+    if (!isLogin && !guruLoaded) loadGuru();
+  }
+
+  async function submit(form, action, fields, busyText) {
+    const btn = form.querySelector("button[type=submit]");
+    const data = {};
+    fields.forEach(n => { data[n] = form.elements[n].value; });
+    btn.disabled = true;
+    setStatus(busyText, false);
+    try {
+      const r = await auth.call(action, data);
+      auth.saveSession(r);
+      setStatus("Berjaya. Membuka myTugas…", false);
+      location.replace("index.html");
+    } catch (e) {
+      setStatus(e.message, true);
+      btn.disabled = false;
+    }
+  }
+
+  tabLogin.addEventListener("click", () => showTab("login"));
+  tabRegister.addEventListener("click", () => showTab("register"));
+  loginForm.addEventListener("submit", e => {
+    e.preventDefault();
+    submit(loginForm, "login", ["username", "password"], "Menyemak akaun…");
+  });
+  registerForm.addEventListener("submit", e => {
+    e.preventDefault();
+    const f = registerForm.elements;
+    if (!f.idGuru.value) return setStatus("Sila pilih nama guru.", true);
+    if (!registerForm.checkValidity()) return registerForm.reportValidity();
+    if (f.password.value !== f.password2.value) return setStatus("Kata laluan dan pengesahan tidak sama.", true);
+    submit(registerForm, "register", ["idGuru", "username", "password", "kodDaftar"], "Mendaftar akaun…");
+  });
+
+  showTab("login");
+})();
+</script>
+</body>
+</html>
