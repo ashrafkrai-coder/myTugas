@@ -85,9 +85,6 @@ small{display:block;margin-top:5px;font-size:.72rem;color:var(--mute);line-heigh
         <small>Sekurang-kurangnya 8 aksara.</small></div>
       <div class="field"><label for="reg-password2">Sahkan kata laluan</label>
         <input id="reg-password2" name="password2" type="password" autocomplete="new-password" minlength="8" maxlength="72" required></div>
-      <div class="field"><label for="reg-kod">Kod pendaftaran sekolah</label>
-        <input id="reg-kod" name="kodDaftar" type="password" autocomplete="off" required>
-        <small>Dapatkan kod ini daripada pentadbir sekolah.</small></div>
       <button class="btn" type="submit">Daftar &amp; Log Masuk</button>
     </form>
 
@@ -131,7 +128,7 @@ small{display:block;margin-top:5px;font-size:.72rem;color:var(--mute);line-heigh
     registerForm.hidden = isLogin;
     tabLogin.setAttribute("aria-selected", String(isLogin));
     tabRegister.setAttribute("aria-selected", String(!isLogin));
-    setStatus(isLogin ? "Masukkan username dan kata laluan." : "Daftar akaun guru. Kod pendaftaran diberi oleh pentadbir sekolah.", false);
+    setStatus(isLogin ? "Masukkan username dan kata laluan." : "Pilih nama anda dan cipta username serta kata laluan.", false);
     if (!isLogin && !guruLoaded) loadGuru();
   }
 
@@ -164,7 +161,7 @@ small{display:block;margin-top:5px;font-size:.72rem;color:var(--mute);line-heigh
     if (!f.idGuru.value) return setStatus("Sila pilih nama guru.", true);
     if (!registerForm.checkValidity()) return registerForm.reportValidity();
     if (f.password.value !== f.password2.value) return setStatus("Kata laluan dan pengesahan tidak sama.", true);
-    submit(registerForm, "register", ["idGuru", "username", "password", "kodDaftar"], "Mendaftar akaun…");
+    submit(registerForm, "register", ["idGuru", "username", "password"], "Mendaftar akaun…");
   });
 
   showTab("login");

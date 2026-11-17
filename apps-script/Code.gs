@@ -5,18 +5,15 @@
  * 1. Buka projek Apps Script anda (Extensions > Apps Script dari Google Sheet "myTugas Database").
  *    Sheet dibuka melalui SHEET_ID di bawah, jadi projek mana pun boleh digunakan.
  * 2. Tampal kod ini ke dalam Code.gs dan simpan.
- * 3. Project Settings (ikon gear) > Script Properties > Add script property:
- *      REGISTER_CODE = kod pendaftaran sekolah (sekurang-kurangnya 8 aksara)
- *    Kongsikan kod ini dengan guru sahaja. Tukar nilainya untuk menutup pendaftaran.
- * 4. Deploy > New deployment > Type: Web app
+ * 3. Deploy > New deployment > Type: Web app
  *      Execute as: Me
  *      Who has access: Anyone
  *    Jika sudah pernah deploy: Deploy > Manage deployments > Edit > Version: New version.
- * 5. URL Web app (berakhir /exec) diletak dalam auth.js (ENDPOINT).
+ * 4. URL Web app (berakhir /exec) diletak dalam auth.js (ENDPOINT).
  *
  * Semua permintaan ialah POST dengan body JSON { action, ... }:
  *   senarai_guru            -> guru aktif yang belum ada akaun (untuk borang daftar)
- *   register {idGuru, username, password, kodDaftar}
+ *   register {idGuru, username, password}
  *   login    {username, password}
  *   data     {session}      -> semua data aplikasi
  *   laporan  {session, tarikh, kod, kehadiran, kebersihan, isu, tindakan, catatan}
@@ -188,16 +185,6 @@ function guruBelumDaftar_() {
 }
 
 function register_(b) {
-  const code = PropertiesService.getScriptProperties().getProperty('REGISTER_CODE');
-  if (!code || code.length < 8) {
-    throw authError_('Pendaftaran belum dibuka. Pentadbir perlu tetapkan REGISTER_CODE (sekurang-kurangnya 8 aksara) dalam Script Properties.');
-  }
-  if (failCount_('regfail') >= 20) throw authError_('Terlalu banyak percubaan. Cuba lagi dalam 15 minit.');
-  if (!safeEqual_(str_(b.kodDaftar), code)) {
-    addFail_('regfail');
-    throw authError_('Kod pendaftaran tidak sah.');
-  }
-
   const username = str_(b.username).toLowerCase();
   const password = String(b.password || '');
   if (!USERNAME_RE.test(username)) throw authError_('Username 3-30 aksara: huruf kecil, nombor, titik atau garis bawah sahaja.');
