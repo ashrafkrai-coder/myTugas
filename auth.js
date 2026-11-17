@@ -1,6 +1,6 @@
 (function () {
   // URL Web App Apps Script (berakhir dengan /exec)
-  const ENDPOINT = "https://script.google.com/macros/s/AKfycbyIfUQ3w8J4uh39UcbkwsU_6xxi90ukZR9saSxtxnqK27N9oWvU5Fu4kLXNdQbYpohb/exec";
+  const ENDPOINT = "https://script.google.com/macros/s/AKfycbzRPUM0tpteQJ04otIR3lADjVvRURbCBNZvH17H7t3quHXXbGMiAUCOsHvaTBVvqD3dwg/exec";
   const KEY = "mytugas_auth";
 
   function readState() {
