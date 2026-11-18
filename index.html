@@ -193,7 +193,7 @@ input[readonly]{background:color-mix(in srgb,var(--bg) 70%,var(--card));color:va
       <div class="field"><label for="lpTindakan">Tindakan yang telah diambil</label>
         <textarea id="lpTindakan" maxlength="1000" placeholder="Contoh: Memberi teguran, membersihkan kawasan atau memaklumkan kepada pihak berkenaan."></textarea></div>
       <div class="field"><label for="lpSusulan">Perlu tindakan susulan PK HEM? <span class="req">*</span></label>
-        <select id="lpSusulan" class="pilih"><option value="">— Pilih —</option><option>Ya</option><option>Tidak</option></select></div>
+        <select id="lpSusulan" class="pilih" data-default="Tidak"><option>Tidak</option><option>Ya</option></select></div>
       <div class="field"><label for="lpCatatan">Catatan tambahan / cadangan</label><textarea id="lpCatatan" maxlength="1000"></textarea></div>
       <button class="btn" id="lpHantar" type="submit"><svg aria-hidden="true"><use href="#i-report"></use></svg>Hantar Laporan</button>
       <button class="btn ghost" id="lpBatal" type="button">Kembali</button>
