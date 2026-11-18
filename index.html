@@ -113,7 +113,7 @@ input[readonly]{background:color-mix(in srgb,var(--bg) 70%,var(--card));color:va
 <header>
   <div class="header-inner">
     <img src="logo.png" alt="Logo SMK Taman Medan">
-    <div><div class="eyebrow">Pengurusan Guru Bertugas</div><h1>myTugas</h1><p id="sekolah">SMK Taman Medan · 2026</p></div>
+    <div><div class="eyebrow">Pengurusan Guru Bertugas</div><h1>myTugas</h1><p id="sekolah">SMK Taman Medan</p></div>
   </div>
 </header>
 
@@ -278,7 +278,7 @@ function apply(d){
   GURU = [...new Set(d.guru.map(g=>g.nama))].sort((a,b)=>surname(a).localeCompare(surname(b)));
   const t = d.tetapan || {};
   MULA = minit(t.masa_mula, 420); TAMAT = minit(t.masa_tamat, 810);
-  $("#sekolah").textContent = [t.nama_sekolah, t.tahun].filter(Boolean).join(" · ");
+  $("#sekolah").textContent = t.nama_sekolah || "SMK Taman Medan";
   $("#notes").innerHTML = (d.catatan||[]).map(c=>`<li>${esc(c)}</li>`).join("");
   $("#motto").textContent = t.motto ? `“${t.motto}”` : "";
   $("#hashtag").textContent = t.hashtag || "";
