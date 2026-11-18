@@ -91,6 +91,7 @@ nav button.on::before{content:"";position:absolute;top:-7px;width:26px;height:2p
 .avatar{flex:0 0 46px;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--brand);color:#dfc58f;font-weight:750;font-size:1rem}
 .logout{margin-left:auto;padding:9px 13px;border-radius:11px;border:1px solid var(--line);background:none;color:var(--mute);font-weight:650;font-size:.78rem;font-family:inherit;cursor:pointer;white-space:nowrap}
 .logout:hover{color:var(--ink);border-color:var(--mute)}
+.req{color:#b4474a}
 input[readonly]{background:color-mix(in srgb,var(--bg) 70%,var(--card));color:var(--mute)}
 @media(max-width:420px){.row2{grid-template-columns:1fr}}
 @media(min-width:700px){main{padding-top:28px}.view#v-home.on{display:grid;grid-template-columns:1.1fr .9fr;align-items:start;gap:16px}.view#v-home>.card{margin-bottom:0}.card{padding:24px}}
@@ -174,14 +175,26 @@ input[readonly]{background:color-mix(in srgb,var(--bg) 70%,var(--card));color:va
       </div>
       <div class="field"><label for="lpGuru">Nama guru</label><input id="lpGuru" readonly></div>
       <div class="row2">
-        <div class="field"><label for="lpHadir">Status kehadiran</label>
-          <select id="lpHadir"><option>Hadir</option><option>Diganti</option><option>Tidak Hadir</option></select></div>
-        <div class="field"><label for="lpBersih">Kebersihan</label>
-          <select id="lpBersih"><option>Baik</option><option>Sederhana</option><option>Kurang Memuaskan</option></select></div>
+        <div class="field"><label for="lpHadir">Status kehadiran <span class="req">*</span></label>
+          <select id="lpHadir" class="pilih" data-default="Hadir"><option>Hadir</option><option>Diganti</option><option>Tidak Hadir</option></select></div>
+        <div class="field"><label for="lpBersih">Keadaan kebersihan kawasan <span class="req">*</span></label>
+          <select id="lpBersih" class="pilih"><option value="">— Pilih —</option><option>Bersih</option><option>Memuaskan</option><option>Perlu tindakan</option></select></div>
       </div>
-      <div class="field"><label for="lpIsu">Isu / salah laku (jika ada)</label><textarea id="lpIsu" maxlength="1000"></textarea></div>
-      <div class="field"><label for="lpTindakan">Tindakan diambil</label><textarea id="lpTindakan" maxlength="1000"></textarea></div>
-      <div class="field"><label for="lpCatatan">Catatan lain</label><textarea id="lpCatatan" maxlength="1000"></textarea></div>
+      <div class="row2">
+        <div class="field"><label for="lpDisiplin">Keadaan disiplin murid <span class="req">*</span></label>
+          <select id="lpDisiplin" class="pilih"><option value="">— Pilih —</option><option>Terkawal</option><option>Ada teguran ringan</option><option>Ada kes disiplin untuk tindakan</option></select></div>
+        <div class="field"><label for="lpSelamat">Keadaan keselamatan kawasan <span class="req">*</span></label>
+          <select id="lpSelamat" class="pilih"><option value="">— Pilih —</option><option>Selamat</option><option>Perlu pemantauan</option><option>Ada isu keselamatan</option></select></div>
+      </div>
+      <div class="field"><label for="lpPatuh">Pematuhan peraturan sekolah <span class="req">*</span></label>
+        <select id="lpPatuh" class="pilih"><option value="">— Pilih —</option><option>Dipatuhi</option><option>Ada pelanggaran</option><option>Tidak berkenaan</option></select></div>
+      <div class="field"><label for="lpMasalah">Masalah atau kejadian yang dikesan</label>
+        <textarea id="lpMasalah" maxlength="1000" placeholder="Jika tiada, tulis: Tiada."></textarea></div>
+      <div class="field"><label for="lpTindakan">Tindakan yang telah diambil</label>
+        <textarea id="lpTindakan" maxlength="1000" placeholder="Contoh: Memberi teguran, membersihkan kawasan atau memaklumkan kepada pihak berkenaan."></textarea></div>
+      <div class="field"><label for="lpSusulan">Perlu tindakan susulan PK HEM? <span class="req">*</span></label>
+        <select id="lpSusulan" class="pilih"><option value="">— Pilih —</option><option>Ya</option><option>Tidak</option></select></div>
+      <div class="field"><label for="lpCatatan">Catatan tambahan / cadangan</label><textarea id="lpCatatan" maxlength="1000"></textarea></div>
       <button class="btn" id="lpHantar" type="submit"><svg aria-hidden="true"><use href="#i-report"></use></svg>Hantar Laporan</button>
       <button class="btn ghost" id="lpBatal" type="button">Kembali</button>
       <p class="msg" id="lpMsg" role="status" aria-live="polite"></p>
@@ -377,14 +390,22 @@ $("#formLapor").addEventListener("submit",async e=>{
   e.preventDefault();
   const msg=$("#lpMsg"), btn=$("#lpHantar");
   const body = {tarikh:$("#lpTarikh").value, kod:$("#lpLokasi").value,
-    kehadiran:$("#lpHadir").value, kebersihan:$("#lpBersih").value,
-    isu:$("#lpIsu").value.trim(), tindakan:$("#lpTindakan").value.trim(), catatan:$("#lpCatatan").value.trim()};
+    kehadiran:$("#lpHadir").value, kebersihan:$("#lpBersih").value, disiplin:$("#lpDisiplin").value,
+    keselamatan:$("#lpSelamat").value, pematuhan:$("#lpPatuh").value, susulan:$("#lpSusulan").value,
+    masalah:$("#lpMasalah").value.trim(), tindakan:$("#lpTindakan").value.trim(), catatan:$("#lpCatatan").value.trim()};
   if(!body.tarikh || !body.kod){ msg.className="msg err"; msg.textContent="Sila isi tarikh dan lokasi."; return; }
+  const kosong = [...document.querySelectorAll("#formLapor select.pilih")].find(s=>!s.value);
+  if(kosong){
+    msg.className="msg err";
+    msg.textContent = `Sila jawab: ${kosong.labels[0].textContent.replace("*","").trim()}`;
+    kosong.focus(); return;
+  }
   btn.disabled=true; msg.className="msg"; msg.textContent="Menghantar…";
   try{
     await AUTH.call("laporan", body);
     msg.className="msg ok"; msg.textContent="Laporan berjaya dihantar. Terima kasih.";
-    ["#lpIsu","#lpTindakan","#lpCatatan"].forEach(s=>$(s).value="");
+    ["#lpMasalah","#lpTindakan","#lpCatatan"].forEach(s=>$(s).value="");
+    document.querySelectorAll("#formLapor select.pilih").forEach(s=>s.value=s.dataset.default||"");
   }catch(err){
     msg.className="msg err";
     msg.textContent = err.code==="NETWORK" || !navigator.onLine ? "Tiada sambungan internet. Cuba lagi bila dalam talian." : `Gagal menghantar: ${err.message}`;

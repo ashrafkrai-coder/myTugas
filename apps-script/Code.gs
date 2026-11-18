@@ -16,7 +16,8 @@
  *   register {idGuru, username, password}
  *   login    {username, password}
  *   data     {session}      -> semua data aplikasi
- *   laporan  {session, tarikh, kod, kehadiran, kebersihan, isu, tindakan, catatan}
+ *   laporan  {session, tarikh, kod, kehadiran, kebersihan, disiplin, keselamatan, pematuhan,
+ *             masalah, tindakan, susulan, catatan}
  *
  * Akaun disimpan dalam tab "Akaun". Untuk menyekat guru, tukar Status kepada "Tidak Aktif".
  * Untuk set semula kata laluan, padam baris akaun guru itu dan minta guru mendaftar semula.
@@ -140,17 +141,33 @@ function addLaporan_(b, me) {
   if (!m) return { ok: false, error: 'Tarikh tidak sah.' };
   const tarikh = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
 
-  const pilih = (v, list) => list.indexOf(str_(v)) >= 0 ? str_(v) : '';
+  // Soalan pilihan wajib; nilai mesti sama dengan pilihan dalam borang
+  const PILIHAN = {
+    kehadiran: ['Hadir', 'Diganti', 'Tidak Hadir'],
+    kebersihan: ['Bersih', 'Memuaskan', 'Perlu tindakan'],
+    disiplin: ['Terkawal', 'Ada teguran ringan', 'Ada kes disiplin untuk tindakan'],
+    keselamatan: ['Selamat', 'Perlu pemantauan', 'Ada isu keselamatan'],
+    pematuhan: ['Dipatuhi', 'Ada pelanggaran', 'Tidak berkenaan'],
+    susulan: ['Ya', 'Tidak']
+  };
+  for (const k in PILIHAN) {
+    if (PILIHAN[k].indexOf(str_(b[k])) < 0) return { ok: false, error: 'Sila jawab semua soalan pilihan.' };
+  }
+
   ss().getSheetByName('Laporan').appendRow([
     new Date(),
     tarikh,
     HARI[tarikh.getDay()],
     me.nama, // nama sentiasa daripada akaun yang log masuk
     kod,
-    pilih(b.kehadiran, ['Hadir', 'Diganti', 'Tidak Hadir']),
-    pilih(b.kebersihan, ['Baik', 'Sederhana', 'Kurang Memuaskan']),
-    safe_(b.isu),
+    str_(b.kehadiran),
+    str_(b.kebersihan),
+    str_(b.disiplin),
+    str_(b.keselamatan),
+    str_(b.pematuhan),
+    safe_(b.masalah),
     safe_(b.tindakan),
+    str_(b.susulan),
     safe_(b.catatan)
   ]);
   return { ok: true };
